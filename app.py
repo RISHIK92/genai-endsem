@@ -121,6 +121,45 @@ st.markdown("""
         padding: 10px 12px !important;
         box-shadow: none !important;
     }
+
+    /* ── Selectbox: force ALL text inside to be visible ── */
+    [data-baseweb="select"] *,
+    [data-baseweb="select"] div,
+    [data-baseweb="select"] span,
+    [data-baseweb="select"] input,
+    [data-baseweb="select"] p,
+    [data-baseweb="select"] [class*="singleValue"],
+    [data-baseweb="select"] [class*="placeholder"],
+    [data-baseweb="select"] [class*="ValueContainer"] * {
+        color: #e4e4e7 !important;
+        -webkit-text-fill-color: #e4e4e7 !important;
+        background-color: transparent !important;
+    }
+
+    /* Container background */
+    [data-baseweb="select"] > div,
+    [data-baseweb="select"] [class*="control"],
+    [data-baseweb="select"] [class*="container"] {
+        background-color: #141414 !important;
+        border-color: #27272a !important;
+    }
+
+    /* Dropdown menu */
+    [data-baseweb="menu"],
+    [data-baseweb="menu"] * {
+        background-color: #141414 !important;
+        color: #e4e4e7 !important;
+        -webkit-text-fill-color: #e4e4e7 !important;
+    }
+    [data-baseweb="menu"] [role="option"]:hover,
+    [data-baseweb="menu"] [aria-selected="true"] {
+        background-color: #27272a !important;
+        color: #fafafa !important;
+        -webkit-text-fill-color: #fafafa !important;
+    }
+    [data-baseweb="select"] svg {
+        fill: #a1a1aa !important;
+    }
     .stTextInput > div > div > input:focus,
     .stTextArea > div > div > textarea:focus,
     .stSelectbox > div > div:focus-within {
@@ -370,6 +409,17 @@ st.markdown("""
     ::-webkit-scrollbar-track { background: #0f0f11; }
     ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: #52525b; }
+
+    /* ── Force sidebar always open ───────────── */
+    section[data-testid="stSidebar"] {
+        transform: none !important;
+        visibility: visible !important;
+        display: block !important;
+        min-width: 280px !important;
+    }
+    [data-testid="collapsedControl"] {
+        display: none !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -409,38 +459,34 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    # API Key
-    st.markdown('<div class="sidebar-section-label">🔐 Authentication</div>', unsafe_allow_html=True)
-    api_key = st.text_input(
-        "Groq API Key",
-        value=GROQ_API_KEY or "",
-        type="password",
-        placeholder="gsk_•••••••••••••••••••••",
-        help="Get a free API key at https://console.groq.com",
-        label_visibility="collapsed"
-    )
-    st.caption("🔗 [Get your free Groq API key →](https://console.groq.com)")
-    if api_key:
-        os.environ["GROQ_API_KEY"] = api_key
+    api_key = GROQ_API_KEY
 
     st.divider()
 
     # Target settings
     st.markdown('<div class="sidebar-section-label">🎯 Target Settings</div>', unsafe_allow_html=True)
 
-    target_difficulty = st.selectbox(
+    st.markdown('<div style="font-size:0.82rem;color:#a1a1aa;margin-bottom:4px;">Difficulty</div>', unsafe_allow_html=True)
+    target_difficulty_raw = st.radio(
         "Difficulty",
-        ["", "Easy", "Medium", "Hard"],
+        ["Any", "Easy", "Medium", "Hard"],
         index=0,
-        help="Leave empty for general analysis"
+        horizontal=True,
+        label_visibility="collapsed",
+        help="Leave on Any for general analysis"
     )
+    target_difficulty = "" if target_difficulty_raw == "Any" else target_difficulty_raw
 
-    target_bloom = st.selectbox(
+    st.markdown('<div style="font-size:0.82rem;color:#a1a1aa;margin-bottom:4px;margin-top:8px;">Bloom\'s Level</div>', unsafe_allow_html=True)
+    target_bloom_raw = st.radio(
         "Bloom's Level",
-        ["", "Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"],
+        ["Any", "Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"],
         index=0,
-        help="Leave empty for auto-detection"
+        horizontal=True,
+        label_visibility="collapsed",
+        help="Leave on Any for auto-detection"
     )
+    target_bloom = "" if target_bloom_raw == "Any" else target_bloom_raw
 
     subject = st.text_input(
         "Subject Area",
@@ -482,13 +528,13 @@ with st.sidebar:
 
     # System info
     st.markdown("""
-    <div style="padding: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
-        <div style="font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">System Stack</div>
-        <div style="font-size: 0.85rem; color: #475569; line-height: 1.8;">
-            🧠 <b>LangGraph</b> · multi-agent<br>
-            📊 <b>XGBoost</b> · difficulty model<br>
-            🔍 <b>FAISS</b> · pedagogical RAG<br>
-            ⚡ <b>Groq</b> · Llama 3.1 70B<br>
+    <div style="padding: 16px; background: #141414; border: 1px solid #27272a; border-radius: 8px;">
+        <div style="font-size: 0.75rem; color: #71717a; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">System Stack</div>
+        <div style="font-size: 0.85rem; color: #a1a1aa; line-height: 1.8;">
+            🧠 <b style="color:#fafafa;">LangGraph</b> · multi-agent<br>
+            📊 <b style="color:#fafafa;">XGBoost</b> · difficulty model<br>
+            🔍 <b style="color:#fafafa;">FAISS</b> · pedagogical RAG<br>
+            ⚡ <b style="color:#fafafa;">Groq</b> · Llama 3.1 70B<br>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -506,6 +552,33 @@ st.markdown("""
 
 # Initialize KB
 initialize_knowledge_base()
+
+# ── Feature Info Box ──────────────────────────────────────────
+st.markdown("""
+<div style="background:#141414;border:1px solid #27272a;border-radius:8px;padding:20px 24px;margin-bottom:20px;">
+    <div style="font-size:0.75rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#71717a;margin-bottom:14px;">What can I do?</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+        <div style="background:#1c1c1e;border:1px solid #27272a;border-radius:6px;padding:14px;">
+            <div style="font-size:1rem;margin-bottom:6px;">💬 Chat</div>
+            <div style="font-size:0.82rem;color:#a1a1aa;line-height:1.6;">Paste any MCQ and chat naturally. Ask the agent to <b style="color:#e4e4e7;">analyze</b>, <b style="color:#e4e4e7;">rewrite</b>, raise the Bloom's level, fix poor distractors, or explain why students failed.</div>
+        </div>
+        <div style="background:#1c1c1e;border:1px solid #27272a;border-radius:6px;padding:14px;">
+            <div style="font-size:1rem;margin-bottom:6px;">📊 Direct Analysis</div>
+            <div style="font-size:0.82rem;color:#a1a1aa;line-height:1.6;"><b style="color:#e4e4e7;">Analyze</b> — instant XGBoost difficulty + Bloom's scoring, no LLM needed.<br><b style="color:#e4e4e7;">Full Pipeline</b> — runs all 4 agent nodes: Analyst → RAG → Reasoner → Refiner.</div>
+        </div>
+        <div style="background:#1c1c1e;border:1px solid #27272a;border-radius:6px;padding:14px;">
+            <div style="font-size:1rem;margin-bottom:6px;">🎭 Agent Debate</div>
+            <div style="font-size:0.82rem;color:#a1a1aa;line-height:1.6;"><b style="color:#e4e4e7;">Create</b> a brand-new question from a topic. Three AI personas — Professor, ML Predictor & Student — debate until consensus on the best question.</div>
+        </div>
+    </div>
+    <div style="margin-top:14px;padding-top:14px;border-top:1px solid #27272a;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <div style="font-size:0.8rem;color:#71717a;"><span style="color:#a1a1aa;font-weight:600;">🎯 Difficulty</span><br>Target Easy / Medium / Hard — XGBoost validates the output matches.</div>
+        <div style="font-size:0.8rem;color:#71717a;"><span style="color:#a1a1aa;font-weight:600;">🧠 Bloom's Level</span><br>Shift question cognitive demand from Remember → Create.</div>
+        <div style="font-size:0.8rem;color:#71717a;"><span style="color:#a1a1aa;font-weight:600;">📚 Subject Area</span><br>Narrows RAG retrieval to domain-specific pedagogy guidelines.</div>
+        <div style="font-size:0.8rem;color:#71717a;"><span style="color:#a1a1aa;font-weight:600;">🤖 XGBoost Model</span><br>Model A uses 25 text features; Model B uses all 30 including structural features.</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 # ── Tabs ──────────────────────────────────────────────────────
 tab_chat, tab_analyze, tab_debate = st.tabs([
@@ -725,17 +798,23 @@ with tab_debate:
         )
 
     with col2:
-        debate_bloom = st.selectbox(
+        st.markdown('<div style="font-size:0.82rem;color:#a1a1aa;margin-bottom:4px;">Bloom\'s Level</div>', unsafe_allow_html=True)
+        debate_bloom = st.radio(
             "Bloom's Level",
             ["Apply", "Analyze", "Evaluate", "Remember", "Understand", "Create"],
-            key="debate_bloom"
+            index=0,
+            key="debate_bloom",
+            label_visibility="collapsed"
         )
 
     with col3:
-        debate_difficulty = st.selectbox(
+        st.markdown('<div style="font-size:0.82rem;color:#a1a1aa;margin-bottom:4px;">Target Difficulty</div>', unsafe_allow_html=True)
+        debate_difficulty = st.radio(
             "Target Difficulty",
             ["Medium", "Easy", "Hard"],
-            key="debate_difficulty"
+            index=0,
+            key="debate_difficulty",
+            label_visibility="collapsed"
         )
 
     max_rounds = st.slider("Max Debate Rounds", 1, 5, 3,
