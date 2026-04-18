@@ -90,15 +90,15 @@ st.markdown("""
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 12px 0 20px 0;
+        padding: 16px 0 20px 0;
         border-bottom: 1px solid #27272a;
         margin-bottom: 20px;
     }
-    .sidebar-logo-icon { font-size: 1.6rem; }
     .sidebar-logo-text {
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: 700;
         color: #fafafa;
+        letter-spacing: 0.02em;
     }
     .sidebar-section-label {
         font-size: 0.75rem;
@@ -454,7 +454,6 @@ with st.sidebar:
     # Logo
     st.markdown("""
     <div class="sidebar-logo">
-        <span class="sidebar-logo-icon">🎓</span>
         <span class="sidebar-logo-text">EduAgent-OS</span>
     </div>
     """, unsafe_allow_html=True)
@@ -464,7 +463,7 @@ with st.sidebar:
     st.divider()
 
     # Target settings
-    st.markdown('<div class="sidebar-section-label">🎯 Target Settings</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section-label">Target Settings</div>', unsafe_allow_html=True)
 
     st.markdown('<div style="font-size:0.82rem;color:#a1a1aa;margin-bottom:4px;">Difficulty</div>', unsafe_allow_html=True)
     target_difficulty_raw = st.radio(
@@ -498,7 +497,7 @@ with st.sidebar:
     st.divider()
 
     # Model selection
-    st.markdown('<div class="sidebar-section-label">🤖 XGBoost Model</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section-label">Model</div>', unsafe_allow_html=True)
     model_choice = st.radio(
         "XGBoost Model",
         ["Model A — Text features (25)", "Model B — All features (30)"],
@@ -509,16 +508,16 @@ with st.sidebar:
     st.divider()
 
     # Quick actions
-    st.markdown('<div class="sidebar-section-label">⚡ Quick Actions</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-section-label">Actions</div>', unsafe_allow_html=True)
 
-    if st.button("🔄  Rebuild Knowledge Base", use_container_width=True):
+    if st.button("Rebuild Knowledge Base", use_container_width=True):
         with st.spinner("Rebuilding index..."):
             indexer = KnowledgeBaseIndexer()
             indexer.build_and_save(str(PDF_DIR), str(FAISS_INDEX_DIR))
             st.session_state.kb_initialized = True
-        st.success("✅ Knowledge base rebuilt!")
+        st.success("Knowledge base rebuilt.")
 
-    if st.button("🗑️  Clear Conversation", use_container_width=True):
+    if st.button("Clear Conversation", use_container_width=True):
         st.session_state.messages = []
         st.session_state.analysis_result = None
         st.session_state.debate_result = None
@@ -529,12 +528,12 @@ with st.sidebar:
     # System info
     st.markdown("""
     <div style="padding: 16px; background: #141414; border: 1px solid #27272a; border-radius: 8px;">
-        <div style="font-size: 0.75rem; color: #71717a; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">System Stack</div>
-        <div style="font-size: 0.85rem; color: #a1a1aa; line-height: 1.8;">
-            🧠 <b style="color:#fafafa;">LangGraph</b> · multi-agent<br>
-            📊 <b style="color:#fafafa;">XGBoost</b> · difficulty model<br>
-            🔍 <b style="color:#fafafa;">FAISS</b> · pedagogical RAG<br>
-            ⚡ <b style="color:#fafafa;">Groq</b> · Llama 3.1 70B<br>
+        <div style="font-size: 0.7rem; color: #52525b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px;">System Stack</div>
+        <div style="font-size: 0.82rem; color: #71717a; line-height: 2;">
+            <span style="color:#a1a1aa;font-weight:600;">LangGraph</span> &nbsp;·&nbsp; multi-agent pipeline<br>
+            <span style="color:#a1a1aa;font-weight:600;">XGBoost</span> &nbsp;·&nbsp; difficulty classifier<br>
+            <span style="color:#a1a1aa;font-weight:600;">FAISS</span> &nbsp;·&nbsp; pedagogical RAG<br>
+            <span style="color:#a1a1aa;font-weight:600;">Groq</span> &nbsp;·&nbsp; Llama 3.1 70B<br>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -545,8 +544,8 @@ with st.sidebar:
 st.markdown("""
 <div class="hero-header">
     <p class="hero-title">EduAgent-OS</p>
-    <p class="hero-subtitle">The Autonomous Assessment Optimizer</p>
-    <p class="hero-description">An enterprise-grade tool powered by XGBoost, RAG, and LLM multi-agent reasoning to analyze, audit, and systematically improve multiple choice questions for maximum pedagogical effectiveness.</p>
+    <p class="hero-subtitle">Autonomous Assessment Optimizer</p>
+    <p class="hero-description">Enterprise-grade question analysis powered by XGBoost, FAISS-backed RAG, and LLM multi-agent reasoning. Analyze, audit, and systematically improve MCQs for maximum pedagogical effectiveness.</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -556,35 +555,35 @@ initialize_knowledge_base()
 # ── Feature Info Box ──────────────────────────────────────────
 st.markdown("""
 <div style="background:#141414;border:1px solid #27272a;border-radius:8px;padding:20px 24px;margin-bottom:20px;">
-    <div style="font-size:0.75rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#71717a;margin-bottom:14px;">What can I do?</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-        <div style="background:#1c1c1e;border:1px solid #27272a;border-radius:6px;padding:14px;">
-            <div style="font-size:1rem;margin-bottom:6px;">💬 Chat</div>
-            <div style="font-size:0.82rem;color:#a1a1aa;line-height:1.6;">Paste any MCQ and chat naturally. Ask the agent to <b style="color:#e4e4e7;">analyze</b>, <b style="color:#e4e4e7;">rewrite</b>, raise the Bloom's level, fix poor distractors, or explain why students failed.</div>
+    <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#52525b;margin-bottom:14px;">Feature Overview</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div style="background:#0f0f11;border:1px solid #27272a;border-radius:6px;padding:14px;">
+            <div style="font-size:0.8rem;font-weight:700;color:#fafafa;margin-bottom:6px;letter-spacing:0.02em;">Chat</div>
+            <div style="font-size:0.8rem;color:#71717a;line-height:1.65;">Paste any MCQ and converse naturally. Ask the agent to <span style="color:#a1a1aa;">analyze</span>, <span style="color:#a1a1aa;">rewrite</span>, elevate Bloom's level, fix distractors, or diagnose poor student performance.</div>
         </div>
-        <div style="background:#1c1c1e;border:1px solid #27272a;border-radius:6px;padding:14px;">
-            <div style="font-size:1rem;margin-bottom:6px;">📊 Direct Analysis</div>
-            <div style="font-size:0.82rem;color:#a1a1aa;line-height:1.6;"><b style="color:#e4e4e7;">Analyze</b> — instant XGBoost difficulty + Bloom's scoring, no LLM needed.<br><b style="color:#e4e4e7;">Full Pipeline</b> — runs all 4 agent nodes: Analyst → RAG → Reasoner → Refiner.</div>
+        <div style="background:#0f0f11;border:1px solid #27272a;border-radius:6px;padding:14px;">
+            <div style="font-size:0.8rem;font-weight:700;color:#fafafa;margin-bottom:6px;letter-spacing:0.02em;">Direct Analysis</div>
+            <div style="font-size:0.8rem;color:#71717a;line-height:1.65;"><span style="color:#a1a1aa;">Analyze</span> — instant XGBoost difficulty + Bloom's scoring, no LLM required.<br><span style="color:#a1a1aa;">Full Pipeline</span> — runs all 4 agent nodes: Analyst → RAG → Reasoner → Refiner.</div>
         </div>
-        <div style="background:#1c1c1e;border:1px solid #27272a;border-radius:6px;padding:14px;">
-            <div style="font-size:1rem;margin-bottom:6px;">🎭 Agent Debate</div>
-            <div style="font-size:0.82rem;color:#a1a1aa;line-height:1.6;"><b style="color:#e4e4e7;">Create</b> a brand-new question from a topic. Three AI personas — Professor, ML Predictor & Student — debate until consensus on the best question.</div>
+        <div style="background:#0f0f11;border:1px solid #27272a;border-radius:6px;padding:14px;">
+            <div style="font-size:0.8rem;font-weight:700;color:#fafafa;margin-bottom:6px;letter-spacing:0.02em;">Agent Debate</div>
+            <div style="font-size:0.8rem;color:#71717a;line-height:1.65;"><span style="color:#a1a1aa;">Create</span> a new question from scratch. Three AI personas — Professor, ML Predictor, and Student Simulator — debate iteratively until reaching consensus.</div>
         </div>
     </div>
-    <div style="margin-top:14px;padding-top:14px;border-top:1px solid #27272a;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
-        <div style="font-size:0.8rem;color:#71717a;"><span style="color:#a1a1aa;font-weight:600;">🎯 Difficulty</span><br>Target Easy / Medium / Hard — XGBoost validates the output matches.</div>
-        <div style="font-size:0.8rem;color:#71717a;"><span style="color:#a1a1aa;font-weight:600;">🧠 Bloom's Level</span><br>Shift question cognitive demand from Remember → Create.</div>
-        <div style="font-size:0.8rem;color:#71717a;"><span style="color:#a1a1aa;font-weight:600;">📚 Subject Area</span><br>Narrows RAG retrieval to domain-specific pedagogy guidelines.</div>
-        <div style="font-size:0.8rem;color:#71717a;"><span style="color:#a1a1aa;font-weight:600;">🤖 XGBoost Model</span><br>Model A uses 25 text features; Model B uses all 30 including structural features.</div>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid #27272a;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <div style="font-size:0.78rem;color:#a1a1aa;"><span style="color:#fafafa;font-weight:600;display:block;margin-bottom:2px;">Difficulty</span>Target Easy / Medium / Hard. XGBoost validates the output matches the goal.</div>
+        <div style="font-size:0.78rem;color:#a1a1aa;"><span style="color:#fafafa;font-weight:600;display:block;margin-bottom:2px;">Bloom's Level</span>Shift cognitive demand from Remember up through Create.</div>
+        <div style="font-size:0.78rem;color:#a1a1aa;"><span style="color:#fafafa;font-weight:600;display:block;margin-bottom:2px;">Subject Area</span>Scopes RAG retrieval to domain-specific pedagogy guidelines.</div>
+        <div style="font-size:0.78rem;color:#a1a1aa;"><span style="color:#fafafa;font-weight:600;display:block;margin-bottom:2px;">XGBoost Model</span>Model A: 25 text features. Model B: 30 features including structural signals.</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
 # ── Tabs ──────────────────────────────────────────────────────
 tab_chat, tab_analyze, tab_debate = st.tabs([
-    "💬  Chat",
-    "📊  Direct Analysis",
-    "🎭  Agent Debate",
+    "Chat",
+    "Direct Analysis",
+    "Agent Debate",
 ])
 
 
@@ -593,17 +592,17 @@ with tab_chat:
     # Example queries card
     example_queries = [
         "Analyze and improve this question",
-        "Make this test Critical Thinking not Recall",
-        "My students failed this. Explain why and fix it",
+        "Make this test critical thinking, not recall",
+        "My students failed this — explain why and fix it",
         "Generate an Apply-level version of this question",
         "This question has poor discrimination. How do I improve it?",
     ]
 
     st.markdown("""
     <div class="glass-card" style="margin-bottom: 12px;">
-        <div class="section-heading">💡 Try asking…</div>
+        <div class="section-heading">Try asking…</div>
         <div class="query-pills">
-    """ + "".join([f'<span class="query-pill">"{q}"</span>' for q in example_queries]) + """
+    """ + "".join([f'<span class="query-pill">{q}</span>' for q in example_queries]) + """
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -619,16 +618,16 @@ with tab_chat:
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        if not (api_key or GROQ_API_KEY):
+        if not api_key:
             with st.chat_message("assistant"):
-                st.error("⚠️ Please set your **Groq API Key** in the sidebar to use the chat.")
+                st.error("No API key found. Set GROQ_API_KEY in your environment.")
                 st.session_state.messages.append({
                     "role": "assistant",
-                    "content": "⚠️ Please set your Groq API Key in the sidebar."
+                    "content": "No API key configured."
                 })
         else:
             with st.chat_message("assistant"):
-                with st.spinner("🤖 Running agent pipeline…"):
+                with st.spinner("Running agent pipeline…"):
                     try:
                         result = run_pipeline(
                             question=prompt,
@@ -648,10 +647,10 @@ with tab_chat:
                         reasoning = result.get("reasoning", "")
                         
                         if reasoning:
-                            st.info(f"**🧠 Expert Analysis & Reasoning**  \n{reasoning}")
+                            st.info(f"**Expert Analysis & Reasoning**\n\n{reasoning}")
 
                         if thinking:
-                            with st.expander("💭 View Model Thinking Process", expanded=False):
+                            with st.expander("View Model Thinking Process", expanded=False):
                                 st.markdown(thinking)
                                 
                         if clean_text.strip():
@@ -680,7 +679,7 @@ with tab_chat:
         st.divider()
         col_dash, col_report = st.columns([3, 1])
         with col_dash:
-            with st.expander("📊 Full Analysis Dashboard", expanded=False):
+            with st.expander("Full Analysis Dashboard", expanded=False):
                 render_dashboard(st.session_state.analysis_result)
         with col_report:
             render_report_download(st.session_state.analysis_result)
@@ -689,8 +688,8 @@ with tab_chat:
 # ─── Tab 2: Direct Analysis ───────────────────────────────────
 with tab_analyze:
     st.markdown("""
-    <div class="section-heading">📊 Direct Question Analysis</div>
-    <p class="section-sub">Paste any MCQ below for instant XGBoost-powered analysis — no LLM required.</p>
+    <div class="section-heading">Direct Question Analysis</div>
+    <p class="section-sub">Paste any MCQ below for instant XGBoost-powered difficulty and Bloom's analysis.</p>
     """, unsafe_allow_html=True)
 
     question_input = st.text_area(
@@ -706,12 +705,12 @@ D) O(n²)""",
 
     col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
-        analyze_btn = st.button("🔍  Analyze", type="primary", use_container_width=True)
+        analyze_btn = st.button("Analyze", type="primary", use_container_width=True)
     with col2:
         full_pipeline_btn = st.button(
-            "🚀  Full Pipeline",
+            "Full Pipeline",
             use_container_width=True,
-            disabled=not bool(question_input.strip() and (api_key or GROQ_API_KEY))
+            disabled=not bool(question_input.strip() and api_key)
         )
 
     if analyze_btn and question_input.strip():
@@ -754,15 +753,14 @@ D) O(n²)""",
                 st.session_state.analysis_result = result
                 render_dashboard(result)
 
-                reasoning = result.get("reasoning", "")
                 if reasoning:
                     st.divider()
-                    st.markdown('<div class="section-heading">🧠 Expert Reasoning</div>', unsafe_allow_html=True)
+                    st.markdown('<div class="section-heading">Expert Reasoning</div>', unsafe_allow_html=True)
                     st.markdown(reasoning)
 
                 thinking = result.get("thinking", "")
                 if thinking:
-                    with st.expander("💭 View Model Thinking Process", expanded=False):
+                    with st.expander("View Model Thinking Process", expanded=False):
                         st.markdown(thinking)
 
                 refined = result.get("refined_questions", {})
@@ -783,8 +781,8 @@ D) O(n²)""",
 # ─── Tab 3: Multi-Agent Debate ────────────────────────────────
 with tab_debate:
     st.markdown("""
-    <div class="section-heading">🎭 Multi-Agent Synthetic Debate</div>
-    <p class="section-sub">Three AI personas — Professor, ML Predictor & Student — collaborate to craft the optimal question.</p>
+    <div class="section-heading">Multi-Agent Debate</div>
+    <p class="section-sub">Three AI personas — Professor, ML Predictor, and Student Simulator — collaborate to craft the optimal question.</p>
     """, unsafe_allow_html=True)
 
     # Debate config glass card
@@ -821,15 +819,15 @@ with tab_debate:
                            help="More rounds = more refined question, but takes longer")
     st.markdown('</div>', unsafe_allow_html=True)
 
-    debate_btn = st.button("🎭  Start Debate", type="primary", use_container_width=True)
+    debate_btn = st.button("Start Debate", type="primary", use_container_width=True)
 
     if debate_btn:
         if not debate_topic:
-            st.warning("⚠️ Please enter a topic to debate.")
-        elif not (api_key or GROQ_API_KEY):
-            st.error("❌ Please set your Groq API Key in the sidebar.")
+            st.warning("Please enter a topic to start the debate.")
+        elif not api_key:
+            st.error("No API key configured. Set GROQ_API_KEY in your environment.")
         else:
-            with st.spinner("🎭 Agents are deliberating… Please wait."):
+            with st.spinner("Agents are deliberating. Please wait…"):
                 try:
                     runner = DebateRunner()
                     debate_result = runner.run_debate(
@@ -863,8 +861,8 @@ with tab_debate:
 
         # Final question highlight
         st.markdown("""
-        <div class="glass-card" style="border-color: rgba(16,185,129,0.35);">
-            <div class="section-heading" style="color: #34d399;">🏆 Final Question</div>
+        <div class="glass-card" style="border-color: rgba(16,185,129,0.25);">
+            <div class="section-heading" style="color: #34d399;">Final Question</div>
         </div>
         """, unsafe_allow_html=True)
         st.markdown(result["final_question"])
@@ -872,7 +870,7 @@ with tab_debate:
         st.divider()
 
         # Debate transcript
-        st.markdown('<div class="section-heading">📜 Debate Transcript</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-heading">Debate Transcript</div>', unsafe_allow_html=True)
 
         for round_entry in result["debate_transcript"]:
             with st.expander(
@@ -881,22 +879,22 @@ with tab_debate:
             ):
                 for exchange in round_entry["exchanges"]:
                     agent_icons = {
-                        "Professor": "👨‍🏫",
-                        "ML Predictor": "🤖",
+                        "Professor": "Prof",
+                        "ML Predictor": "ML",
                     }
-                    icon = agent_icons.get(exchange["agent"], "🧑‍🎓")
+                    icon = agent_icons.get(exchange["agent"], "Sim")
 
                     st.markdown(f"""
 <div class="agent-badge">
     <span class="agent-badge-dot">{icon}</span>
-    {exchange['agent']} &nbsp;·&nbsp; <em style="font-weight:400;color:#8892aa;">{exchange['action']}</em>
+    {exchange['agent']} &nbsp;·&nbsp; <em style="font-weight:400;color:#71717a;">{exchange['action']}</em>
 </div>
 """, unsafe_allow_html=True)
                     st.markdown(exchange["output"])
 
                     thinking = exchange.get("thinking", "")
                     if thinking:
-                        with st.expander(f"💭 {exchange['agent']} — Thinking Process", expanded=False):
+                        with st.expander(f"{exchange['agent']} — Thinking Process", expanded=False):
                             st.markdown(thinking)
 
                     st.divider()
