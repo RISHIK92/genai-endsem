@@ -1,0 +1,57 @@
+# ─── Python ──────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+
+# ─── Virtual Environments ────────────────────────────────────
+.env
+.venv
+env/
+venv/
+ENV/
+
+# ─── Secrets ─────────────────────────────────────────────────
+# Keep .env.example, ignore actual .env
+.env
+!.env.example
+
+# ─── ML Models (large binary files) ─────────────────────────
+# Uncomment below if you don't want to commit models to Git
+# ml/models/*.json
+# ml/models/*.pkl
+
+# ─── FAISS Index (auto-generated, can be rebuilt) ────────────
+rag/data/faiss_index/
+rag/data/pdfs/*.pdf
+
+# ─── Streamlit cache ─────────────────────────────────────────
+.streamlit/
+
+# ─── Testing & Coverage ──────────────────────────────────────
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# ─── IDE & OS ────────────────────────────────────────────────
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
+
+# ─── Jupyter ─────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ─── Logs ────────────────────────────────────────────────────
+*.log
+logs/
