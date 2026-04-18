@@ -31,110 +31,345 @@ st.set_page_config(
     page_title="EduAgent-OS | Assessment Optimizer",
     page_icon="🎓",
     layout="wide",
-    initial_sidebar_state="expanded"
 )
-
-# ─── Custom CSS ──────────────────────────────────────────────
 st.markdown("""
 <style>
-    /* Dark theme enhancement */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    /* ── Root & typography ─────────────────── */
+    html, body, [class*="css"] {
+        font-family: 'Inter', sans-serif !important;
+        color: #e4e4e7 !important;
+    }
+
+    /* ── App background ─────────────────────── */
     .stApp {
-        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+        background-color: #09090b;
     }
-    
-    /* Header styling */
-    .main-header {
-        background: linear-gradient(90deg, rgba(99,102,241,0.15) 0%, rgba(139,92,246,0.15) 100%);
-        border: 1px solid rgba(99,102,241,0.3);
-        border-radius: 16px;
-        padding: 24px 32px;
-        margin-bottom: 24px;
-    }
-    
-    .main-header h1 {
-        background: linear-gradient(90deg, #818cf8, #a78bfa, #c084fc);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-size: 2.2rem;
-        font-weight: 800;
-        margin: 0;
-    }
-    
-    .main-header p {
-        color: #94a3b8;
-        font-size: 1rem;
-        margin: 4px 0 0 0;
-    }
-    
-    /* Chat messages */
-    .stChatMessage {
-        background: rgba(30, 41, 59, 0.6) !important;
-        border: 1px solid rgba(51, 65, 85, 0.5) !important;
-        border-radius: 12px !important;
-    }
-    
-    /* Sidebar */
-    section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%);
-        border-right: 1px solid rgba(99,102,241,0.2);
-    }
-    
-    /* Expander */
-    .streamlit-expanderHeader {
-        background: rgba(30, 41, 59, 0.8) !important;
+
+    /* ── Hide Streamlit chrome ──────────────── */
+    #MainMenu, footer, header { visibility: hidden; }
+    .block-container { padding-top: 2rem !important; padding-bottom: 3rem !important; max-width: 1200px; }
+
+    /* ── Professional Header ────────────────── */
+    .hero-header {
+        background: #141414;
+        border: 1px solid #27272a;
         border-radius: 8px;
+        padding: 32px 40px;
+        margin-bottom: 24px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
     }
-    
-    /* Buttons */
+    .hero-title {
+        color: #fafafa;
+        font-size: 2.2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 8px 0;
+    }
+    .hero-subtitle {
+        color: #a1a1aa;
+        font-size: 1.1rem;
+        font-weight: 400;
+        margin: 0 0 16px 0;
+    }
+    .hero-description {
+        color: #71717a;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin: 0;
+        max-width: 800px;
+    }
+
+    /* ── Sidebar ────────────────────────────── */
+    section[data-testid="stSidebar"] {
+        background-color: #0f0f11 !important;
+        border-right: 1px solid #27272a !important;
+    }
+    .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 0 20px 0;
+        border-bottom: 1px solid #27272a;
+        margin-bottom: 20px;
+    }
+    .sidebar-logo-icon { font-size: 1.6rem; }
+    .sidebar-logo-text {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #fafafa;
+    }
+    .sidebar-section-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #71717a;
+        margin: 20px 0 8px 2px;
+    }
+
+    /* ── Inputs ─────────────────────────────── */
+    .stTextInput > div > div > input,
+    .stTextArea > div > div > textarea,
+    .stSelectbox > div > div,
+    .stPassword > div > div > input {
+        background: #141414 !important;
+        border: 1px solid #27272a !important;
+        border-radius: 6px !important;
+        color: #e4e4e7 !important;
+        padding: 10px 12px !important;
+        box-shadow: none !important;
+    }
+    .stTextInput > div > div > input:focus,
+    .stTextArea > div > div > textarea:focus,
+    .stSelectbox > div > div:focus-within {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 3px rgba(59,130,246,0.15) !important;
+    }
+    .stTextInput > div > div > input::placeholder,
+    .stTextArea > div > div > textarea::placeholder,
+    .stPassword > div > div > input::placeholder {
+        color: #52525b !important;
+        opacity: 1 !important;
+    }
+    .stChatInput textarea::placeholder {
+        color: #52525b !important;
+        opacity: 1 !important;
+    }
+    .stChatInput { border-color: #27272a !important; }
+    label, .stRadio label span, .stSlider label {
+        color: #a1a1aa !important;
+    }
+
+    /* ── Buttons ─────────────────────────────── */
     .stButton > button {
-        background: linear-gradient(90deg, #6366f1, #8b5cf6) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 8px !important;
+        background: #fafafa !important;
+        color: #09090b !important;
+        border: 1px solid #fafafa !important;
+        border-radius: 6px !important;
         font-weight: 600 !important;
-        transition: all 0.3s ease !important;
+        padding: 8px 16px !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+        transition: all 0.2s !important;
     }
-    
     .stButton > button:hover {
+        background: #e4e4e7 !important;
+        border-color: #e4e4e7 !important;
         transform: translateY(-1px) !important;
-        box-shadow: 0 4px 12px rgba(99,102,241,0.4) !important;
     }
-    
-    /* Tabs */
+
+    /* ── Tabs ────────────────────────────────── */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
+        background: transparent;
+        padding: 0;
+        border-bottom: 1px solid #27272a;
     }
-    
     .stTabs [data-baseweb="tab"] {
-        background: rgba(30, 41, 59, 0.6);
-        border-radius: 8px;
-        border: 1px solid rgba(99,102,241,0.2);
-        color: #e2e8f0;
+        background: transparent !important;
+        border-radius: 0 !important;
+        border: none !important;
+        border-bottom: 2px solid transparent !important;
+        color: #71717a !important;
+        font-weight: 500 !important;
+        padding: 12px 16px !important;
     }
-    
     .stTabs [aria-selected="true"] {
-        background: rgba(99,102,241,0.2) !important;
-        border-color: #6366f1 !important;
+        color: #fafafa !important;
+        border-bottom: 2px solid #fafafa !important;
     }
-    
-    /* Cards */
-    .metric-card {
-        background: rgba(30, 41, 59, 0.8);
-        border: 1px solid rgba(99,102,241,0.2);
-        border-radius: 12px;
-        padding: 16px;
-        text-align: center;
+
+    /* ── Chat & Markdown ────────────────────── */
+    .stChatMessage {
+        background: #141414 !important;
+        border: 1px solid #27272a !important;
+        border-radius: 8px !important;
+        padding: 16px !important;
+        margin-bottom: 16px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
     }
-    
-    /* Dividers */
-    hr {
-        border-color: rgba(99,102,241,0.2) !important;
+    .stMarkdown p, .stMarkdown li {
+        line-height: 1.8 !important;
+        color: #d4d4d8 !important;
+        font-size: 0.95rem !important;
     }
-    
-    /* Hide Streamlit branding */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
+    .stMarkdown ul, .stMarkdown ol {
+        margin-bottom: 1.2em !important;
+        padding-left: 1.5em !important;
+    }
+    .stMarkdown strong, .stMarkdown b {
+        color: #fafafa !important;
+        font-weight: 700 !important;
+    }
+    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+        color: #fafafa !important;
+        margin-top: 1.5em !important;
+        margin-bottom: 0.5em !important;
+        font-weight: 600 !important;
+    }
+    .stMarkdown code {
+        background: rgba(63,63,70,0.5) !important;
+        border: 1px solid #3f3f46 !important;
+        color: #a78bfa !important;
+        padding: 2px 6px !important;
+        border-radius: 4px !important;
+        font-size: 0.85em !important;
+    }
+    .stCodeBlock {
+        background: #141414 !important;
+        border: 1px solid #27272a !important;
+        border-radius: 8px !important;
+        margin: 16px 0 !important;
+    }
+    .stMarkdown blockquote {
+        border-left: 4px solid #3b82f6 !important;
+        color: #a1a1aa !important;
+        background: rgba(59,130,246,0.05) !important;
+        padding: 12px 16px !important;
+        margin: 16px 0 !important;
+        border-radius: 0 8px 8px 0 !important;
+    }
+
+    /* ── Cards & Sections ────────────────────── */
+    .glass-card {
+        background: #141414;
+        border: 1px solid #27272a;
+        border-radius: 8px;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        margin-bottom: 16px;
+    }
+    .section-heading {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fafafa;
+        margin: 0 0 6px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .section-sub {
+        color: #71717a;
+        font-size: 0.9rem;
+        margin: 0 0 20px 0;
+        line-height: 1.5;
+    }
+
+    /* ── Metrics ─────────────────────────────── */
+    [data-testid="stMetric"] {
+        background: #141414 !important;
+        border: 1px solid #27272a !important;
+        border-radius: 8px !important;
+        padding: 16px !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+    }
+    [data-testid="stMetricValue"] {
+        color: #fafafa !important;
+        font-size: 1.8rem !important;
+        font-weight: 700 !important;
+    }
+    [data-testid="stMetricLabel"] {
+        color: #71717a !important;
+        font-size: 0.8rem !important;
+        font-weight: 500 !important;
+    }
+
+    /* ── Expanders ───────────────────────────── */
+    .streamlit-expanderHeader, [data-testid="stExpander"] summary {
+        background: #141414 !important;
+        border: 1px solid #27272a !important;
+        border-radius: 6px !important;
+        color: #d4d4d8 !important;
+        font-weight: 500 !important;
+        padding: 12px 16px !important;
+    }
+    [data-testid="stExpander"] {
+        border: none !important;
+        background: transparent !important;
+    }
+
+    /* ── Alerts ──────────────────────────────── */
+    [data-testid="stAlert"] {
+        border-radius: 6px !important;
+        border: 1px solid #27272a !important;
+        background: #141414 !important;
+    }
+
+    /* ── Agent Badges ────────────────────────── */
+    .agent-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 4px;
+        background: #1c1c1e;
+        border: 1px solid #27272a;
+        color: #a1a1aa;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+    .agent-badge-dot { font-size: 0.9rem; }
+
+    hr { border-color: #27272a !important; margin: 24px 0 !important; }
+
+    /* ── Misc ─────────────────────────────────── */
+    .stCaption, [data-testid="stCaptionContainer"] {
+        color: #71717a !important;
+        font-size: 0.78rem !important;
+    }
+    h2, h3 {
+        color: #fafafa !important;
+        font-family: 'Inter', sans-serif !important;
+    }
+
+    /* ── Download button ──────────────────────── */
+    .stDownloadButton > button {
+        background: #fafafa !important;
+        color: #09090b !important;
+        border: 1px solid #fafafa !important;
+        border-radius: 6px !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+    }
+    .stDownloadButton > button:hover {
+        background: #e4e4e7 !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    }
+
+    /* ── Spinner ─────────────────────────────── */
+    .stSpinner > div > div {
+        border-top-color: #3b82f6 !important;
+    }
+
+    /* ── Query pills ─────────────────────────── */
+    .query-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 8px;
+    }
+    .query-pill {
+        display: inline-block;
+        padding: 6px 14px;
+        background: #1c1c1e;
+        border: 1px solid #27272a;
+        border-radius: 99px;
+        font-size: 0.82rem;
+        color: #a1a1aa;
+        font-weight: 500;
+    }
+
+    /* ── Divider ─────────────────────────────── */
+    [data-testid="stHorizontalRule"] {
+        border-color: #27272a !important;
+    }
+
+    /* ── Scrollbar ───────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f0f11; }
+    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #52525b; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -166,133 +401,161 @@ def initialize_knowledge_base():
 
 # ─── Sidebar ─────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## ⚙️ Configuration")
-    
+    # Logo
+    st.markdown("""
+    <div class="sidebar-logo">
+        <span class="sidebar-logo-icon">🎓</span>
+        <span class="sidebar-logo-text">EduAgent-OS</span>
+    </div>
+    """, unsafe_allow_html=True)
+
     # API Key
+    st.markdown('<div class="sidebar-section-label">🔐 Authentication</div>', unsafe_allow_html=True)
     api_key = st.text_input(
         "Groq API Key",
         value=GROQ_API_KEY or "",
         type="password",
-        help="Get a free API key at https://console.groq.com"
+        placeholder="gsk_•••••••••••••••••••••",
+        help="Get a free API key at https://console.groq.com",
+        label_visibility="collapsed"
     )
+    st.caption("🔗 [Get your free Groq API key →](https://console.groq.com)")
     if api_key:
         os.environ["GROQ_API_KEY"] = api_key
-    
+
     st.divider()
-    
+
     # Target settings
-    st.markdown("### 🎯 Target Settings")
-    
+    st.markdown('<div class="sidebar-section-label">🎯 Target Settings</div>', unsafe_allow_html=True)
+
     target_difficulty = st.selectbox(
-        "Target Difficulty",
+        "Difficulty",
         ["", "Easy", "Medium", "Hard"],
         index=0,
         help="Leave empty for general analysis"
     )
-    
+
     target_bloom = st.selectbox(
-        "Target Bloom's Level",
+        "Bloom's Level",
         ["", "Remember", "Understand", "Apply", "Analyze", "Evaluate", "Create"],
         index=0,
         help="Leave empty for auto-detection"
     )
-    
+
     subject = st.text_input(
         "Subject Area",
         value="General",
+        placeholder="e.g., Computer Science",
         help="e.g., Computer Science, Mathematics, Physics"
     )
-    
+
     st.divider()
-    
+
     # Model selection
-    st.markdown("### 🤖 Model Selection")
+    st.markdown('<div class="sidebar-section-label">🤖 XGBoost Model</div>', unsafe_allow_html=True)
     model_choice = st.radio(
         "XGBoost Model",
-        ["Model A (Text Only — 25 features)", "Model B (All Features — 30 features)"],
-        index=1
+        ["Model A — Text features (25)", "Model B — All features (30)"],
+        index=1,
+        label_visibility="collapsed"
     )
-    
+
     st.divider()
-    
+
     # Quick actions
-    st.markdown("### 🚀 Quick Actions")
-    
-    if st.button("🔄 Rebuild Knowledge Base", use_container_width=True):
-        with st.spinner("Rebuilding..."):
+    st.markdown('<div class="sidebar-section-label">⚡ Quick Actions</div>', unsafe_allow_html=True)
+
+    if st.button("🔄  Rebuild Knowledge Base", use_container_width=True):
+        with st.spinner("Rebuilding index..."):
             indexer = KnowledgeBaseIndexer()
             indexer.build_and_save(str(PDF_DIR), str(FAISS_INDEX_DIR))
             st.session_state.kb_initialized = True
-        st.success("Knowledge base rebuilt!")
-    
-    if st.button("🗑️ Clear History", use_container_width=True):
+        st.success("✅ Knowledge base rebuilt!")
+
+    if st.button("🗑️  Clear Conversation", use_container_width=True):
         st.session_state.messages = []
         st.session_state.analysis_result = None
         st.session_state.debate_result = None
         st.rerun()
-    
+
     st.divider()
-    st.caption("Built with ❤️ using LangGraph + XGBoost + FAISS")
-    st.caption("Powered by Groq (Llama 3.1 70B)")
+
+    # System info
+    st.markdown("""
+    <div style="padding: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+        <div style="font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">System Stack</div>
+        <div style="font-size: 0.85rem; color: #475569; line-height: 1.8;">
+            🧠 <b>LangGraph</b> · multi-agent<br>
+            📊 <b>XGBoost</b> · difficulty model<br>
+            🔍 <b>FAISS</b> · pedagogical RAG<br>
+            ⚡ <b>Groq</b> · Llama 3.1 70B<br>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # ─── Main Content ────────────────────────────────────────────
-# Header
+# Hero Header
 st.markdown("""
-<div class="main-header">
-    <h1>🎓 EduAgent-OS</h1>
-    <p>The Autonomous Assessment Optimizer — Powered by XGBoost, RAG, and LLM Reasoning</p>
+<div class="hero-header">
+    <p class="hero-title">EduAgent-OS</p>
+    <p class="hero-subtitle">The Autonomous Assessment Optimizer</p>
+    <p class="hero-description">An enterprise-grade tool powered by XGBoost, RAG, and LLM multi-agent reasoning to analyze, audit, and systematically improve multiple choice questions for maximum pedagogical effectiveness.</p>
 </div>
 """, unsafe_allow_html=True)
 
 # Initialize KB
 initialize_knowledge_base()
 
-# Tabs
+# ── Tabs ──────────────────────────────────────────────────────
 tab_chat, tab_analyze, tab_debate = st.tabs([
-    "💬 Chat Interface", 
-    "📊 Direct Analysis", 
-    "🎭 Multi-Agent Debate"
+    "💬  Chat",
+    "📊  Direct Analysis",
+    "🎭  Agent Debate",
 ])
 
-# ─── Tab 1: Chat Interface ──────────────────────────────────
+
+# ─── Tab 1: Chat Interface ────────────────────────────────────
 with tab_chat:
-    # Example queries
-    with st.expander("💡 Example queries", expanded=False):
-        example_queries = [
-            "Analyze this question and suggest improvements",
-            "My students failed this question. Explain why and fix it.",
-            "Make this question test Critical Thinking instead of Recall",
-            "Generate an Apply-level version of this question",
-            "This question has poor discrimination. How can I improve it?",
-        ]
-        for q in example_queries:
-            st.caption(f"• *\"{q}\"*")
-    
+    # Example queries card
+    example_queries = [
+        "Analyze and improve this question",
+        "Make this test Critical Thinking not Recall",
+        "My students failed this. Explain why and fix it",
+        "Generate an Apply-level version of this question",
+        "This question has poor discrimination. How do I improve it?",
+    ]
+
+    st.markdown("""
+    <div class="glass-card" style="margin-bottom: 12px;">
+        <div class="section-heading">💡 Try asking…</div>
+        <div class="query-pills">
+    """ + "".join([f'<span class="query-pill">"{q}"</span>' for q in example_queries]) + """
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
     # Chat history
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
-    
+
     # Chat input
-    if prompt := st.chat_input("Paste a question or ask about assessment design..."):
-        # Add user message
+    if prompt := st.chat_input("Paste a question or ask about assessment design…"):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
-        
-        # Check if API key is set
+
         if not (api_key or GROQ_API_KEY):
             with st.chat_message("assistant"):
-                st.error("⚠️ Please set your Groq API Key in the sidebar to use the chat.")
+                st.error("⚠️ Please set your **Groq API Key** in the sidebar to use the chat.")
                 st.session_state.messages.append({
-                    "role": "assistant", 
+                    "role": "assistant",
                     "content": "⚠️ Please set your Groq API Key in the sidebar."
                 })
         else:
-            # Run the agent pipeline
             with st.chat_message("assistant"):
-                with st.spinner("🤖 Analyzing..."):
+                with st.spinner("🤖 Running agent pipeline…"):
                     try:
                         result = run_pipeline(
                             question=prompt,
@@ -301,37 +564,36 @@ with tab_chat:
                             target_difficulty=target_difficulty,
                             subject=subject
                         )
-                        
+
                         st.session_state.analysis_result = result
-                        
-                        # Display agent messages
+
                         agent_messages = result.get("messages", [])
-                        response_text = "\n\n".join(agent_messages)
+                        raw_response_text = "\n\n".join(agent_messages)
                         
-                        # Add reasoning (already cleaned of <think> tags by the reasoner node)
+                        clean_text, parsed_think = separate_thinking(raw_response_text)
+                        thinking = result.get("thinking", "") or parsed_think
                         reasoning = result.get("reasoning", "")
+                        
                         if reasoning:
-                            response_text += f"\n\n---\n\n### 🧠 Expert Analysis\n\n{reasoning}"
-                        
-                        st.markdown(response_text)
-                        
-                        # Show thinking in a collapsible expander (if any)
-                        thinking = result.get("thinking", "")
+                            st.info(f"**🧠 Expert Analysis & Reasoning**  \n{reasoning}")
+
                         if thinking:
                             with st.expander("💭 View Model Thinking Process", expanded=False):
                                 st.markdown(thinking)
-                        
-                        # Show refined questions inline
+                                
+                        if clean_text.strip():
+                            st.markdown(f"**Final Output:**\n\n{clean_text}")
+
                         refined = result.get("refined_questions", {})
                         if any(refined.values()):
                             st.divider()
                             render_question_editor(result)
-                        
+
                         st.session_state.messages.append({
                             "role": "assistant",
-                            "content": response_text[:2000]  # Truncate for history
+                            "content": (f"**🧠 Expert Analysis:**\n{reasoning}\n\n" if reasoning else "") + clean_text[:2000]
                         })
-                        
+
                     except Exception as e:
                         error_msg = f"❌ Error: {str(e)}"
                         st.error(error_msg)
@@ -339,8 +601,8 @@ with tab_chat:
                             "role": "assistant",
                             "content": error_msg
                         })
-    
-    # Show dashboard if results exist
+
+    # Dashboard at bottom if results exist
     if st.session_state.analysis_result:
         st.divider()
         col_dash, col_report = st.columns([3, 1])
@@ -351,138 +613,144 @@ with tab_chat:
             render_report_download(st.session_state.analysis_result)
 
 
-# ─── Tab 2: Direct Analysis ─────────────────────────────────
+# ─── Tab 2: Direct Analysis ───────────────────────────────────
 with tab_analyze:
-    st.subheader("📊 Direct Question Analysis")
-    st.caption("Paste a question below for instant ML analysis without LLM reasoning.")
-    
+    st.markdown("""
+    <div class="section-heading">📊 Direct Question Analysis</div>
+    <p class="section-sub">Paste any MCQ below for instant XGBoost-powered analysis — no LLM required.</p>
+    """, unsafe_allow_html=True)
+
     question_input = st.text_area(
-        "MCQ Question (include stem and all options)",
-        height=200,
+        "MCQ Question",
+        height=180,
         placeholder="""What is the time complexity of binary search?
 A) O(n)
 B) O(log n)
 C) O(n log n)
-D) O(n²)"""
+D) O(n²)""",
+        label_visibility="collapsed"
     )
-    
-    col1, col2 = st.columns([1, 3])
+
+    col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
-        analyze_btn = st.button("🔍 Analyze", type="primary", use_container_width=True)
-    
+        analyze_btn = st.button("🔍  Analyze", type="primary", use_container_width=True)
+    with col2:
+        full_pipeline_btn = st.button(
+            "🚀  Full Pipeline",
+            use_container_width=True,
+            disabled=not bool(question_input.strip() and (api_key or GROQ_API_KEY))
+        )
+
     if analyze_btn and question_input.strip():
-        with st.spinner("Running XGBoost analysis..."):
+        with st.spinner("Running XGBoost analysis…"):
             try:
                 from ml.predictor import QuestionPredictor
                 from ml.feature_extractor import FeatureExtractor
-                
+
                 predictor = QuestionPredictor()
                 extractor = FeatureExtractor()
-                
+
                 prediction = predictor.predict(question_input, model="B")
                 audit = extractor.audit(question_input)
                 bloom = extractor.get_bloom_level(question_input)
-                
+
                 result = {
                     "ml_stats": prediction,
                     "feature_audit": audit,
                     "current_bloom_level": bloom,
                     "raw_question": question_input,
                 }
-                
+
                 st.session_state.analysis_result = result
                 render_dashboard(result)
-                
+
             except Exception as e:
                 st.error(f"Analysis error: {str(e)}")
-    
-    # Full pipeline button
-    if question_input.strip() and (api_key or GROQ_API_KEY):
-        st.divider()
-        if st.button("🚀 Run Full Agent Pipeline (Analyze + Reason + Refine)", 
-                      use_container_width=True):
-            with st.spinner("🤖 Running full pipeline... This may take 30-60 seconds."):
-                try:
-                    result = run_pipeline(
-                        question=question_input,
-                        user_request="Analyze and improve this question",
-                        target_bloom_level=target_bloom,
-                        target_difficulty=target_difficulty,
-                        subject=subject
+
+    if full_pipeline_btn and question_input.strip():
+        with st.spinner("🤖 Running full agent pipeline… This may take 30–60 s."):
+            try:
+                result = run_pipeline(
+                    question=question_input,
+                    user_request="Analyze and improve this question",
+                    target_bloom_level=target_bloom,
+                    target_difficulty=target_difficulty,
+                    subject=subject
+                )
+
+                st.session_state.analysis_result = result
+                render_dashboard(result)
+
+                reasoning = result.get("reasoning", "")
+                if reasoning:
+                    st.divider()
+                    st.markdown('<div class="section-heading">🧠 Expert Reasoning</div>', unsafe_allow_html=True)
+                    st.markdown(reasoning)
+
+                thinking = result.get("thinking", "")
+                if thinking:
+                    with st.expander("💭 View Model Thinking Process", expanded=False):
+                        st.markdown(thinking)
+
+                refined = result.get("refined_questions", {})
+                if any(refined.values()):
+                    st.divider()
+                    render_question_editor(result)
+                    render_original_vs_refined(
+                        question_input, refined,
+                        result.get("validation_results", {})
                     )
-                    
-                    st.session_state.analysis_result = result
-                    
-                    # Display results
-                    render_dashboard(result)
-                    
-                    reasoning = result.get("reasoning", "")
-                    if reasoning:
-                        st.divider()
-                        st.subheader("🧠 Expert Reasoning")
-                        st.markdown(reasoning)
-                    
-                    # Show thinking in a collapsible expander (if any)
-                    thinking = result.get("thinking", "")
-                    if thinking:
-                        with st.expander("💭 View Model Thinking Process", expanded=False):
-                            st.markdown(thinking)
-                    
-                    refined = result.get("refined_questions", {})
-                    if any(refined.values()):
-                        st.divider()
-                        render_question_editor(result)
-                        render_original_vs_refined(
-                            question_input, refined, 
-                            result.get("validation_results", {})
-                        )
-                    
-                    # Report download
-                    render_report_download(result)
-                    
-                except Exception as e:
-                    st.error(f"Pipeline error: {str(e)}")
+
+                render_report_download(result)
+
+            except Exception as e:
+                st.error(f"Pipeline error: {str(e)}")
 
 
-# ─── Tab 3: Multi-Agent Debate ──────────────────────────────
+# ─── Tab 3: Multi-Agent Debate ────────────────────────────────
 with tab_debate:
-    st.subheader("🎭 Multi-Agent Synthetic Student Debate")
-    st.caption(
-        "Three AI agents collaborate to design the optimal question: "
-        "a Professor, an ML Predictor, and a Student Persona."
-    )
-    
+    st.markdown("""
+    <div class="section-heading">🎭 Multi-Agent Synthetic Debate</div>
+    <p class="section-sub">Three AI personas — Professor, ML Predictor & Student — collaborate to craft the optimal question.</p>
+    """, unsafe_allow_html=True)
+
+    # Debate config glass card
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
         debate_topic = st.text_input(
             "Topic / Concept",
             placeholder="e.g., Binary Search, Newton's Laws"
         )
-    
+
     with col2:
         debate_bloom = st.selectbox(
             "Bloom's Level",
             ["Apply", "Analyze", "Evaluate", "Remember", "Understand", "Create"],
             key="debate_bloom"
         )
-    
+
     with col3:
         debate_difficulty = st.selectbox(
             "Target Difficulty",
             ["Medium", "Easy", "Hard"],
             key="debate_difficulty"
         )
-    
-    max_rounds = st.slider("Max Debate Rounds", 1, 5, 3)
-    
-    if st.button("🎭 Start Debate", type="primary", use_container_width=True):
+
+    max_rounds = st.slider("Max Debate Rounds", 1, 5, 3,
+                           help="More rounds = more refined question, but takes longer")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    debate_btn = st.button("🎭  Start Debate", type="primary", use_container_width=True)
+
+    if debate_btn:
         if not debate_topic:
-            st.warning("Please enter a topic.")
+            st.warning("⚠️ Please enter a topic to debate.")
         elif not (api_key or GROQ_API_KEY):
-            st.error("Please set your Groq API Key in the sidebar.")
+            st.error("❌ Please set your Groq API Key in the sidebar.")
         else:
-            with st.spinner("🎭 Debate in progress... Agents are discussing..."):
+            with st.spinner("🎭 Agents are deliberating… Please wait."):
                 try:
                     runner = DebateRunner()
                     debate_result = runner.run_debate(
@@ -492,52 +760,64 @@ with tab_debate:
                         max_rounds=max_rounds,
                         subject=subject
                     )
-                    
                     st.session_state.debate_result = debate_result
-                    
                 except Exception as e:
                     st.error(f"Debate error: {str(e)}")
-    
+
     # Display debate results
     if st.session_state.debate_result:
         result = st.session_state.debate_result
-        
-        # Summary
+
+        st.divider()
+
+        # Summary metrics
         consensus_icon = "✅" if result["consensus_reached"] else "⚠️"
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Rounds", result["rounds_taken"])
-        col2.metric("Consensus", f"{consensus_icon} {'Yes' if result['consensus_reached'] else 'No'}")
-        
         report = result.get("difficulty_report", {})
         predicted = report.get("prediction", {}).get("difficulty", "?")
-        col3.metric("Final Difficulty", predicted)
-        
+
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Debate Rounds", result["rounds_taken"])
+        m2.metric("Consensus", f"{consensus_icon} {'Yes' if result['consensus_reached'] else 'No'}")
+        m3.metric("Final Difficulty", predicted)
+
         st.divider()
-        
-        # Final question
-        st.subheader("🏆 Final Question")
+
+        # Final question highlight
+        st.markdown("""
+        <div class="glass-card" style="border-color: rgba(16,185,129,0.35);">
+            <div class="section-heading" style="color: #34d399;">🏆 Final Question</div>
+        </div>
+        """, unsafe_allow_html=True)
         st.markdown(result["final_question"])
-        
-        # Debate transcript
+
         st.divider()
-        st.subheader("📜 Debate Transcript")
-        
+
+        # Debate transcript
+        st.markdown('<div class="section-heading">📜 Debate Transcript</div>', unsafe_allow_html=True)
+
         for round_entry in result["debate_transcript"]:
-            with st.expander(f"Round {round_entry['round']}", expanded=round_entry['round'] == 1):
+            with st.expander(
+                f"Round {round_entry['round']}",
+                expanded=(round_entry["round"] == 1)
+            ):
                 for exchange in round_entry["exchanges"]:
                     agent_icons = {
                         "Professor": "👨‍🏫",
                         "ML Predictor": "🤖",
                     }
                     icon = agent_icons.get(exchange["agent"], "🧑‍🎓")
-                    
-                    st.markdown(f"**{icon} {exchange['agent']}** — *{exchange['action']}*")
+
+                    st.markdown(f"""
+<div class="agent-badge">
+    <span class="agent-badge-dot">{icon}</span>
+    {exchange['agent']} &nbsp;·&nbsp; <em style="font-weight:400;color:#8892aa;">{exchange['action']}</em>
+</div>
+""", unsafe_allow_html=True)
                     st.markdown(exchange["output"])
-                    
-                    # Show thinking in a nested expander if present
+
                     thinking = exchange.get("thinking", "")
                     if thinking:
-                        with st.expander(f"💭 {exchange['agent']} Thinking", expanded=False):
+                        with st.expander(f"💭 {exchange['agent']} — Thinking Process", expanded=False):
                             st.markdown(thinking)
-                    
+
                     st.divider()
