@@ -446,20 +446,20 @@ The Groq/Llama model sometimes emits chain-of-thought reasoning inside `<think>.
 
 Key configurable parameters:
 
-| Parameter                   | Default                   | Description                  |
-| --------------------------- | ------------------------- | ---------------------------- |
-| `LLM_MODEL`                 | `llama-3.1-70b-versatile` | Groq LLM model               |
-| `EMBEDDING_MODEL`           | `all-MiniLM-L6-v2`        | Sentence Transformer for RAG |
-| `EMBEDDING_DIMENSION`       | 384                       | Vector dimension             |
-| `CHUNK_SIZE`                | 1000                      | Characters per RAG chunk     |
-| `CHUNK_OVERLAP`             | 200                       | Overlap between chunks       |
-| `RAG_TOP_K`                 | 5                         | Number of chunks to retrieve |
-| `MAX_REFINEMENT_ITERATIONS` | 3                         | Max Refiner → Reasoner loops |
-| `LLM_TEMPERATURE`           | 0.7                       | Default LLM temperature      |
-| `LLM_MAX_TOKENS`            | 2048                      | Max tokens per LLM response  |
-| `MAX_STEM_LENGTH`           | 200                       | Audit threshold (chars)      |
-| `MAX_LATEX_DENSITY`         | 0.30                      | Audit threshold (ratio)      |
-| `MIN_READABILITY_SCORE`     | 30                        | Flesch-Kincaid threshold     |
+| Parameter                   | Default            | Description                  |
+| --------------------------- | ------------------ | ---------------------------- |
+| `LLM_MODEL`                 | `qwen/qwen3-32b`   | Groq LLM model               |
+| `EMBEDDING_MODEL`           | `all-MiniLM-L6-v2` | Sentence Transformer for RAG |
+| `EMBEDDING_DIMENSION`       | 384                | Vector dimension             |
+| `CHUNK_SIZE`                | 1000               | Characters per RAG chunk     |
+| `CHUNK_OVERLAP`             | 200                | Overlap between chunks       |
+| `RAG_TOP_K`                 | 5                  | Number of chunks to retrieve |
+| `MAX_REFINEMENT_ITERATIONS` | 3                  | Max Refiner → Reasoner loops |
+| `LLM_TEMPERATURE`           | 0.7                | Default LLM temperature      |
+| `LLM_MAX_TOKENS`            | 2048               | Max tokens per LLM response  |
+| `MAX_STEM_LENGTH`           | 200                | Audit threshold (chars)      |
+| `MAX_LATEX_DENSITY`         | 0.30               | Audit threshold (ratio)      |
+| `MIN_READABILITY_SCORE`     | 30                 | Flesch-Kincaid threshold     |
 
 ---
 

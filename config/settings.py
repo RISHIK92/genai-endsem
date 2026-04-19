@@ -37,7 +37,7 @@ FAISS_INDEX_DIR = RAG_DATA_DIR / "faiss_index"
 GROQ_API_KEY = _get("GROQ_API_KEY")
 
 # ─── Model Configuration ────────────────────────────────────
-LLM_MODEL = _get("LLM_MODEL", "llama-3.1-70b-versatile")
+LLM_MODEL = _get("LLM_MODEL", "qwen/qwen3-32b")
 EMBEDDING_MODEL = _get("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 
 # ─── XGBoost Model Paths ────────────────────────────────────
