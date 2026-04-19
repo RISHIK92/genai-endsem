@@ -458,7 +458,13 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    api_key = GROQ_API_KEY
+    # Read key at runtime so st.secrets is available (Streamlit Cloud)
+    import os as _os
+    try:
+        import streamlit as _st
+        api_key = _st.secrets.get("GROQ_API_KEY", _os.getenv("GROQ_API_KEY", ""))
+    except Exception:
+        api_key = _os.getenv("GROQ_API_KEY", "")
 
     st.divider()
 
