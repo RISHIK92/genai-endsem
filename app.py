@@ -12,6 +12,7 @@ Features:
 import streamlit as st
 import os
 import sys
+import logging
 from dotenv import load_dotenv
 
 # Ensure project root is in path
@@ -19,6 +20,14 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Load .env early so os.getenv works everywhere in this process
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
+
+# ─── Logger ──────────────────────────────────────────────────
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s — %(message)s",
+    datefmt="%H:%M:%S",
+)
+logger = logging.getLogger("eduagent")
 
 from agent.graph import run_pipeline
 from debate.debate_runner import DebateRunner
@@ -447,9 +456,13 @@ def initialize_knowledge_base():
     if not st.session_state.kb_initialized:
         index_path = FAISS_INDEX_DIR / "index.faiss"
         if not index_path.exists():
+            logger.info("FAISS index not found — building knowledge base at %s", FAISS_INDEX_DIR)
             with st.spinner("🔨 Building knowledge base (first run only)..."):
                 indexer = KnowledgeBaseIndexer()
                 indexer.build_and_save(str(PDF_DIR), str(FAISS_INDEX_DIR))
+            logger.info("Knowledge base built successfully")
+        else:
+            logger.info("FAISS index found at %s — skipping rebuild", index_path)
         st.session_state.kb_initialized = True
 
 
@@ -468,6 +481,11 @@ with st.sidebar:
         api_key = st.secrets.get("GROQ_API_KEY", "") or os.getenv("GROQ_API_KEY", "")
     except Exception:
         api_key = os.getenv("GROQ_API_KEY", "")
+
+    if api_key:
+        logger.info("GROQ_API_KEY loaded successfully (length=%d)", len(api_key))
+    else:
+        logger.warning("GROQ_API_KEY not found — LLM features will be disabled")
 
     st.divider()
 
@@ -520,10 +538,12 @@ with st.sidebar:
     st.markdown('<div class="sidebar-section-label">Actions</div>', unsafe_allow_html=True)
 
     if st.button("Rebuild Knowledge Base", use_container_width=True):
+        logger.info("User triggered knowledge base rebuild")
         with st.spinner("Rebuilding index..."):
             indexer = KnowledgeBaseIndexer()
             indexer.build_and_save(str(PDF_DIR), str(FAISS_INDEX_DIR))
             st.session_state.kb_initialized = True
+        logger.info("Knowledge base rebuild complete")
         st.success("Knowledge base rebuilt.")
 
     if st.button("Clear Conversation", use_container_width=True):
@@ -628,6 +648,7 @@ with tab_chat:
             st.markdown(prompt)
 
         if not api_key:
+            logger.warning("Chat submitted but GROQ_API_KEY is not set")
             with st.chat_message("assistant"):
                 st.error("No API key found. Set GROQ_API_KEY in your environment.")
                 st.session_state.messages.append({
@@ -638,6 +659,8 @@ with tab_chat:
             with st.chat_message("assistant"):
                 with st.spinner("Running agent pipeline…"):
                     try:
+                        logger.info("Chat pipeline started | bloom=%s difficulty=%s subject=%s",
+                                    target_bloom or "any", target_difficulty or "any", subject)
                         result = run_pipeline(
                             question=prompt,
                             user_request=prompt,
@@ -647,6 +670,8 @@ with tab_chat:
                         )
 
                         st.session_state.analysis_result = result
+                        logger.info("Chat pipeline completed | refined_keys=%s",
+                                    list(result.get("refined_questions", {}).keys()))
 
                         agent_messages = result.get("messages", [])
                         raw_response_text = "\n\n".join(agent_messages)
@@ -676,6 +701,7 @@ with tab_chat:
                         })
 
                     except Exception as e:
+                        logger.exception("Chat pipeline error: %s", e)
                         error_msg = f"❌ Error: {str(e)}"
                         st.error(error_msg)
                         st.session_state.messages.append({
@@ -723,6 +749,7 @@ D) O(n²)""",
         )
 
     if analyze_btn and question_input.strip():
+        logger.info("Direct analysis started | model=B | question_len=%d", len(question_input))
         with st.spinner("Running XGBoost analysis…"):
             try:
                 from ml.predictor import QuestionPredictor
@@ -743,12 +770,17 @@ D) O(n²)""",
                 }
 
                 st.session_state.analysis_result = result
+                logger.info("Direct analysis complete | bloom=%s difficulty=%s",
+                            bloom, prediction.get("difficulty", "?"))
                 render_dashboard(result)
 
             except Exception as e:
+                logger.exception("Direct analysis error: %s", e)
                 st.error(f"Analysis error: {str(e)}")
 
     if full_pipeline_btn and question_input.strip():
+        logger.info("Full pipeline started | bloom=%s difficulty=%s subject=%s",
+                    target_bloom or "any", target_difficulty or "any", subject)
         with st.spinner("🤖 Running full agent pipeline… This may take 30–60 s."):
             try:
                 result = run_pipeline(
@@ -760,6 +792,7 @@ D) O(n²)""",
                 )
 
                 st.session_state.analysis_result = result
+                logger.info("Full pipeline complete")
                 render_dashboard(result)
 
                 if reasoning:
@@ -784,6 +817,7 @@ D) O(n²)""",
                 render_report_download(result)
 
             except Exception as e:
+                logger.exception("Full pipeline error: %s", e)
                 st.error(f"Pipeline error: {str(e)}")
 
 
@@ -836,6 +870,8 @@ with tab_debate:
         elif not api_key:
             st.error("No API key configured. Set GROQ_API_KEY in your environment.")
         else:
+            logger.info("Debate started | topic=%s bloom=%s difficulty=%s rounds=%d",
+                        debate_topic, debate_bloom, debate_difficulty, max_rounds)
             with st.spinner("Agents are deliberating. Please wait…"):
                 try:
                     runner = DebateRunner()
@@ -847,7 +883,10 @@ with tab_debate:
                         subject=subject
                     )
                     st.session_state.debate_result = debate_result
+                    logger.info("Debate complete | consensus=%s rounds_taken=%s",
+                                debate_result.get("consensus_reached"), debate_result.get("rounds_taken"))
                 except Exception as e:
+                    logger.exception("Debate error: %s", e)
                     st.error(f"Debate error: {str(e)}")
 
     # Display debate results

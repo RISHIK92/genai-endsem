@@ -3,19 +3,28 @@ Centralized configuration for EduAgent-OS.
 Loads environment variables and provides constants.
 """
 import os
+import logging
 from pathlib import Path
 from dotenv import load_dotenv
 
 # Load .env file if it exists (local dev)
 load_dotenv()
 
+logger = logging.getLogger("eduagent.settings")
+
 def _get(key: str, default: str = "") -> str:
     """Read from Streamlit secrets (cloud) first, then os.environ (local)."""
     try:
         import streamlit as st
-        return st.secrets.get(key, os.getenv(key, default))
+        value = st.secrets.get(key, os.getenv(key, default))
     except Exception:
-        return os.getenv(key, default)
+        value = os.getenv(key, default)
+
+    if value and value != default:
+        logger.debug("Config key '%s' loaded from environment", key)
+    else:
+        logger.warning("Config key '%s' not found — using default: '%s'", key, default)
+    return value
 
 # ─── Base Paths ──────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).parent.parent
