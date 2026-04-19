@@ -6,8 +6,16 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load .env file if it exists
+# Load .env file if it exists (local dev)
 load_dotenv()
+
+def _get(key: str, default: str = "") -> str:
+    """Read from Streamlit secrets (cloud) first, then os.environ (local)."""
+    try:
+        import streamlit as st
+        return st.secrets.get(key, os.getenv(key, default))
+    except Exception:
+        return os.getenv(key, default)
 
 # ─── Base Paths ──────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -17,11 +25,11 @@ PDF_DIR = RAG_DATA_DIR / "pdfs"
 FAISS_INDEX_DIR = RAG_DATA_DIR / "faiss_index"
 
 # ─── API Keys ────────────────────────────────────────────────
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GROQ_API_KEY = _get("GROQ_API_KEY")
 
 # ─── Model Configuration ────────────────────────────────────
-LLM_MODEL = os.getenv("LLM_MODEL", "llama-3.1-70b-versatile")
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
+LLM_MODEL = _get("LLM_MODEL", "llama-3.1-70b-versatile")
+EMBEDDING_MODEL = _get("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 
 # ─── XGBoost Model Paths ────────────────────────────────────
 # Model A: Text-only features (25 features)

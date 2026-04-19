@@ -21,6 +21,7 @@ ENV/
 # Keep .env.example, ignore actual .env
 .env
 !.env.example
+.streamlit/secrets.toml
 
 # ─── ML Models (large binary files) ─────────────────────────
 # Uncomment below if you don't want to commit models to Git
