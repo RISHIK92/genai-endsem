@@ -12,9 +12,13 @@ Features:
 import streamlit as st
 import os
 import sys
+from dotenv import load_dotenv
 
 # Ensure project root is in path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Load .env early so os.getenv works everywhere in this process
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 from agent.graph import run_pipeline
 from debate.debate_runner import DebateRunner
@@ -458,13 +462,12 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    # Read key at runtime so st.secrets is available (Streamlit Cloud)
-    import os as _os
+    # Read key at runtime so st.secrets is available (Streamlit Cloud),
+    # falling back to .env (loaded above) for local development.
     try:
-        import streamlit as _st
-        api_key = _st.secrets.get("GROQ_API_KEY", _os.getenv("GROQ_API_KEY", ""))
+        api_key = st.secrets.get("GROQ_API_KEY", "") or os.getenv("GROQ_API_KEY", "")
     except Exception:
-        api_key = _os.getenv("GROQ_API_KEY", "")
+        api_key = os.getenv("GROQ_API_KEY", "")
 
     st.divider()
 
