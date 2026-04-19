@@ -51,7 +51,7 @@ def render_difficulty_gauge(ml_stats: dict):
         font={"color": "#e2e8f0"}
     )
     
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key="difficulty_gauge")
     st.caption(f"Confidence: {confidence:.1%}")
 
 
@@ -95,7 +95,7 @@ def render_discrimination_bar(ml_stats: dict):
         font={"color": "#e2e8f0"}
     )
     
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key="discrimination_bar")
 
 
 def render_feature_importance(ml_stats: dict):
@@ -142,7 +142,7 @@ def render_feature_importance(ml_stats: dict):
         font={"color": "#e2e8f0"}
     )
     
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key="feature_importance")
 
 
 def render_probability_chart(ml_stats: dict):
@@ -178,7 +178,7 @@ def render_probability_chart(ml_stats: dict):
         font={"color": "#e2e8f0"}
     )
     
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key="probability_chart")
 
 
 def render_audit_warnings(audit_flags: list):
@@ -268,7 +268,7 @@ def render_semantic_scores(semantic_scores: dict):
                    "tickfont": {"color": "#94a3b8"}},
             yaxis={"tickfont": {"color": "#e2e8f0"}},
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, key="semantic_blend_chart")
 
     # LLM reasoning + student response
     col1, col2 = st.columns(2)
